@@ -1,0 +1,31 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_MITHRIL_API_URL": "https://instaclean-mithril-staging.fly.dev",
+        "EXPO_PUBLIC_MITHRIL_ENV": "staging"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_MITHRIL_API_URL": "https://instaclean-mithril-staging.fly.dev",
+        "EXPO_PUBLIC_MITHRIL_ENV": "staging"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_MITHRIL_API_URL": "https://api.tryinstaclean.com",
+        "EXPO_PUBLIC_MITHRIL_ENV": "production"
+      }
+    }
+  }
+}
