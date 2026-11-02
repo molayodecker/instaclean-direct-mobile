@@ -27,11 +27,11 @@ export default function ServiceRequestDetailScreen() {
     [list.data, requestId],
   );
 
-  const workerChoices = useMemo(() => {
-    const rows = candidates.data?.candidates ?? [];
-    if (!request?.role) return rows;
-    return rows.filter((c: AdminCandidate) => !request.role || c.desiredRoles.includes(request.role));
-  }, [candidates.data, request?.role]);
+  const rows = candidates.data?.candidates ?? [];
+  const requestedRole = request?.role;
+  const workerChoices = requestedRole
+    ? rows.filter((c: AdminCandidate) => c.desiredRoles.includes(requestedRole))
+    : rows;
 
   async function runAssign(workerUserId: string) {
     setActionError(null);
