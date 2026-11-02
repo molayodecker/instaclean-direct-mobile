@@ -14,9 +14,9 @@ import { formatMinorAmount } from '@/lib/mithril';
 import { theme } from '@/constants/theme';
 
 export default function WorkerDetailScreen() {
-  const { userId } = useLocalSearchParams<{ userId: string }>();
+  const { userId, search } = useLocalSearchParams<{ userId: string; search?: string }>();
   const workerId = userId ?? '';
-  const { data, isLoading, error } = useAdminWorkers();
+  const { data, isLoading, error } = useAdminWorkers(search || undefined);
   const walletQuery = useAdminWorkerWallet(workerId);
   const credit = useCreditWorkerWallet(workerId);
   const worker = (data?.cleaners ?? []).find((c) => c.userId === workerId);
