@@ -11,6 +11,7 @@ import {
   requestPhoneOtp,
   restoreSession,
   signOutSession,
+  setSessionListener,
   verifyPhoneOtp,
   type MithrilUser,
 } from '@/lib/mithril';
@@ -49,6 +50,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  useEffect(() => {
+    setSessionListener((token) => {
+      setAccessToken(token);
+      if (!token) setUser(null);
+    });
+    return () => setSessionListener(null);
   }, []);
 
   useEffect(() => {
