@@ -2462,10 +2462,7 @@ export interface components {
              * @enum {string}
              */
             priority: "urgent" | "same_day" | "standard";
-            /** @default {} */
-            requirements: {
-                [key: string]: unknown;
-            };
+            requirements?: components["schemas"]["DirectRequirements"];
         };
         /** MobileVerificationService */
         MobileVerificationService: {
@@ -2574,9 +2571,7 @@ export interface components {
             relatedBookingId: string | null;
             /** Format: date-time */
             requestedStartAt: string | null;
-            requirements: {
-                [key: string]: unknown;
-            };
+            requirements: components["schemas"]["DirectRequirements"];
             /** @enum {string|null} */
             role: "househelp" | "nanny" | "cleaner" | "elder_caregiver" | "cook" | "driver" | "gardener" | null;
             /** @enum {string} */
@@ -2740,6 +2735,13 @@ export interface components {
             month: string;
             totalNetMinor: number;
         };
+        /** DirectAdminTeamRoleGuideEntry */
+        DirectAdminTeamRoleGuideEntry: {
+            access: string;
+            label: string;
+            /** @enum {string} */
+            role: "admin" | "reviewer";
+        };
         /** DirectAdminContractPaydayRequest */
         DirectAdminContractPaydayRequest: {
             /** @example 2026-10 */
@@ -2796,6 +2798,11 @@ export interface components {
             sent: boolean;
             viewUrl: string;
         };
+        /**
+         * AssignedCleanerForCustomerBookingRows
+         * @description Rows returned when mobile.rpc calls get_assigned_cleaner_for_customer_booking.
+         */
+        AssignedCleanerForCustomerBookingRows: components["schemas"]["AssignedCleanerForCustomerBooking"][];
         /** DirectAdminCleanerApplicationListResponse */
         DirectAdminCleanerApplicationListResponse: {
             applications: components["schemas"]["DirectAdminCleanerApplication"][];
@@ -2973,6 +2980,30 @@ export interface components {
             smsSent: boolean;
             whatsappSent: boolean;
         };
+        /**
+         * BookingPaymentSnapshot
+         * @description One row returned by get_booking_payment_snapshot.
+         */
+        BookingPaymentSnapshot: {
+            booking_cover: boolean;
+            booking_cover_amount?: number | null;
+            /** Format: uuid */
+            booking_id: string;
+            cleaner_earnings_minor?: number | null;
+            currency: string;
+            final_amount_minor: number;
+            payment_status?: string | null;
+            platform_fee?: number | null;
+            pricing_version?: string | null;
+            promotion_discount_minor: number;
+            /** Format: uuid */
+            promotion_id?: string | null;
+            promotion_slug?: string | null;
+            /** @description booking_status */
+            status: string;
+            subscription_recurring_amount_minor?: number | null;
+            work_rate_ghs_per_hour?: number | null;
+        };
         /** MobileAppUpdatePolicy */
         MobileAppUpdatePolicy: {
             /** @enum {string} */
@@ -2996,6 +3027,12 @@ export interface components {
             local_time?: string | null;
             same_day_cutoff_at?: string | null;
         };
+        /**
+         * DirectRequirements
+         * @description Closed object. Dispatch and placement store this jsonb and do not interpret keys. Send an empty object until a named field is added on this schema.
+         * @default {}
+         */
+        DirectRequirements: Record<string, never>;
         /** DirectCreatePlacementResponse */
         DirectCreatePlacementResponse: {
             /** Format: uuid */
@@ -3043,6 +3080,10 @@ export interface components {
         };
         /** MobileReplaceCleanerWeekdayBlocksResponse */
         MobileReplaceCleanerWeekdayBlocksResponse: {
+            /**
+             * @description RPC returns void; always null.
+             * @enum {string|null}
+             */
             data: null;
         };
         /** DirectAdminAssistedBookingResponse */
@@ -3129,22 +3170,29 @@ export interface components {
             workerName?: string | null;
             workers: components["schemas"]["DirectAdminContractLetterWorker"][];
         };
+        /** DirectPaymentProviderDiagnostics */
+        DirectPaymentProviderDiagnostics: {
+            amountMinor?: number | null;
+            currency?: string | null;
+            httpStatus?: number | null;
+            reason?: string | null;
+            reference?: string | null;
+            status: string;
+        };
         /** DirectAdminOpsMutationResponse */
         DirectAdminOpsMutationResponse: {
             message: string;
-        };
-        /** DirectAdminTeamRoleGuideEntry */
-        DirectAdminTeamRoleGuideEntry: {
-            access: string;
-            label: string;
-            /** @enum {string} */
-            role: "admin" | "reviewer";
         };
         /** DirectAdminTeamListResponse */
         DirectAdminTeamListResponse: {
             members: components["schemas"]["DirectAdminTeamMember"][];
             permissionCatalog?: components["schemas"]["DirectAdminTeamPermissionCatalogEntry"][];
             roleGuide?: components["schemas"]["DirectAdminTeamRoleGuideEntry"][];
+        };
+        /** DirectAdminReportsTopAreaPoint */
+        DirectAdminReportsTopAreaPoint: {
+            name: string;
+            revenueMinor: number;
         };
         /** DirectAdminCustomer */
         DirectAdminCustomer: {
@@ -3207,24 +3255,6 @@ export interface components {
             /** Format: date-time */
             generatedAt: string;
             jobs: components["schemas"]["DirectAdminLiveJob"][];
-        };
-        /** DirectAdminCleanerRosterItem */
-        DirectAdminCleanerRosterItem: {
-            applicationId?: string | null;
-            applicationStatus?: string | null;
-            completedJobs?: number | null;
-            email?: string | null;
-            hourlyRateGhs?: number | null;
-            name: string;
-            phone?: string | null;
-            rating?: number | null;
-            specialties: string[];
-            status: string;
-            /** Format: date-time */
-            updatedAt?: string | null;
-            /** Format: uuid */
-            userId: string;
-            verified: boolean;
         };
         /** DirectAdminCleanerListResponse */
         DirectAdminCleanerListResponse: {
@@ -3448,9 +3478,7 @@ export interface components {
             /** Format: uuid */
             transportation_quote_id?: string | null;
             scheduled_time: string;
-            service: {
-                [key: string]: unknown;
-            };
+            service: components["schemas"]["PendingBookingService"];
             location_latitude: number;
             address: string;
             customer_contact_phone: string;
@@ -3545,6 +3573,26 @@ export interface components {
             validFrom?: string | null;
             /** Format: date-time */
             validTo?: string | null;
+        };
+        /** DirectPaymentAttemptDiagnostics */
+        DirectPaymentAttemptDiagnostics: {
+            amountMinor?: number | null;
+            /** Format: date-time */
+            createdAt?: string | null;
+            currency?: string | null;
+            /** Format: date-time */
+            failedAt?: string | null;
+            failureReason?: string | null;
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            paidAt?: string | null;
+            /** Format: date-time */
+            readyAt?: string | null;
+            reference?: string | null;
+            status: string;
+            /** Format: date-time */
+            updatedAt?: string | null;
         };
         /** DirectAdminNotificationDelivery */
         DirectAdminNotificationDelivery: {
@@ -3774,9 +3822,7 @@ export interface components {
             relatedServiceId: number | null;
             /** Format: date-time */
             requestedStartAt: string | null;
-            requirements: {
-                [key: string]: unknown;
-            };
+            requirements: components["schemas"]["DirectRequirements"];
             /** @enum {string|null} */
             role: "househelp" | "nanny" | "cleaner" | "elder_caregiver" | "cook" | "driver" | "gardener" | null;
             /** @enum {string} */
@@ -4029,10 +4075,7 @@ export interface components {
              * @enum {string}
              */
             priority: "urgent" | "same_day" | "standard";
-            /** @default {} */
-            requirements: {
-                [key: string]: unknown;
-            };
+            requirements?: components["schemas"]["DirectRequirements"];
             /** @enum {string} */
             role: "househelp" | "nanny" | "cleaner" | "elder_caregiver" | "cook" | "driver" | "gardener";
         };
@@ -4164,13 +4207,19 @@ export interface components {
             reference: string;
             status: string;
         };
-        /** DirectAdminCleanerApprovalResponse */
+        /**
+         * DirectAdminCleanerApprovalResponse
+         * @description JSON returned by public.approve_cleaner_application/1
+         */
         DirectAdminCleanerApprovalResponse: {
+            /** Format: uuid */
             applicationId?: string | null;
+            /** Format: uuid */
             cleanerId?: string | null;
             message?: string | null;
             status?: string | null;
             success?: boolean | null;
+            /** Format: uuid */
             userId?: string | null;
         };
         /** MobileManageExtraTasksRequest */
@@ -4283,6 +4332,28 @@ export interface components {
             severity: "yellow" | "red";
             status: string;
         };
+        /**
+         * AssignedCleanerForCustomerBooking
+         * @description One row returned by get_assigned_cleaner_for_customer_booking.
+         */
+        AssignedCleanerForCustomerBooking: {
+            avatar_url?: string | null;
+            /** Format: uuid */
+            cleaner_id: string;
+            completed_jobs?: number | null;
+            firstname?: string | null;
+            fullname?: string | null;
+            hourly_rate?: number | null;
+            lastname?: string | null;
+            rating?: number | null;
+            specialties?: string[] | null;
+            verified?: boolean | null;
+        };
+        /**
+         * BookingPaymentSnapshotRows
+         * @description Rows returned when mobile.rpc calls get_booking_payment_snapshot.
+         */
+        BookingPaymentSnapshotRows: components["schemas"]["BookingPaymentSnapshot"][];
         /** DirectAdminWhatsAppSendRequest */
         DirectAdminWhatsAppSendRequest: {
             body: string;
@@ -4395,10 +4466,7 @@ export interface components {
             /** @enum {string} */
             livingArrangement: "live_in" | "live_out" | "flexible";
             notes?: string | null;
-            /** @default {} */
-            requirements: {
-                [key: string]: unknown;
-            };
+            requirements?: components["schemas"]["DirectRequirements"];
             /** @enum {string} */
             role: "househelp" | "nanny" | "cleaner" | "elder_caregiver" | "cook" | "driver" | "gardener";
             /** @enum {string|null} */
@@ -4459,35 +4527,6 @@ export interface components {
             /** Format: uuid */
             workerId: string;
             workerName: string;
-        };
-        /** DirectPaymentAttemptDiagnostics */
-        DirectPaymentAttemptDiagnostics: {
-            amountMinor?: number | null;
-            /** Format: date-time */
-            createdAt?: string | null;
-            currency?: string | null;
-            /** Format: date-time */
-            failedAt?: string | null;
-            failureReason?: string | null;
-            /** Format: uuid */
-            id: string;
-            /** Format: date-time */
-            paidAt?: string | null;
-            /** Format: date-time */
-            readyAt?: string | null;
-            reference?: string | null;
-            status: string;
-            /** Format: date-time */
-            updatedAt?: string | null;
-        };
-        /** DirectPaymentProviderDiagnostics */
-        DirectPaymentProviderDiagnostics: {
-            amountMinor?: number | null;
-            currency?: string | null;
-            httpStatus?: number | null;
-            reason?: string | null;
-            reference?: string | null;
-            status: string;
         };
         /** DirectPaymentDiagnosticsResponse */
         DirectPaymentDiagnosticsResponse: {
@@ -4997,6 +5036,32 @@ export interface components {
             createdAt: string;
             note: string;
         };
+        /**
+         * PendingBookingService
+         * @description service_types row embedded by get_pending_booking_for_edit via to_jsonb(s.*).
+         */
+        PendingBookingService: {
+            active?: boolean | null;
+            /** @enum {string} */
+            category: "cleaning" | "washing" | "ironing" | "flooding" | "airbnb" | "quick_tasks" | "caregiving" | "pet_care" | "cooks" | "drivers";
+            category_id?: number | null;
+            description?: string | null;
+            discount?: number | null;
+            duration: string;
+            duration_increment_hours: number;
+            features?: string[] | null;
+            icon_scale: number;
+            id: number;
+            image_url?: string | null;
+            /** Format: date-time */
+            last_updated?: string | null;
+            maximum_duration_hours: number;
+            minimum_duration_hours: number;
+            name: string;
+            price: number;
+            specialty_slug?: string | null;
+            weight: number;
+        };
         /** DirectAdminPayout */
         DirectAdminPayout: {
             amountMinor?: number;
@@ -5010,8 +5075,8 @@ export interface components {
         };
         /** MobileRpcResult */
         MobileRpcResult: {
-            /** @description Allowlisted function result. get_pending_booking_for_edit returns PendingBookingForEdit rows. */
-            data: (components["schemas"]["PendingBookingForEditRows"] | {
+            /** @description Allowlisted function result. get_pending_booking_for_edit returns PendingBookingForEdit rows. get_booking_payment_snapshot returns BookingPaymentSnapshot rows. get_assigned_cleaner_for_customer_booking returns AssignedCleanerForCustomerBooking rows. Other allowlisted functions still return a JSON value. */
+            data: (components["schemas"]["PendingBookingForEditRows"] | components["schemas"]["BookingPaymentSnapshotRows"] | components["schemas"]["AssignedCleanerForCustomerBookingRows"] | {
                 [key: string]: unknown;
             } | {
                 [key: string]: unknown;
@@ -5073,17 +5138,6 @@ export interface components {
             /** @enum {string} */
             channel: "whatsapp" | "email";
         };
-        /** DirectAdminReportsDailyRevenuePoint */
-        DirectAdminReportsDailyRevenuePoint: {
-            /** Format: date */
-            day: string;
-            revenueMinor: number;
-        };
-        /** DirectAdminReportsTopAreaPoint */
-        DirectAdminReportsTopAreaPoint: {
-            name: string;
-            revenueMinor: number;
-        };
         /** DirectAdminReportsSummary */
         DirectAdminReportsSummary: {
             avgOrderMinor?: number;
@@ -5098,6 +5152,12 @@ export interface components {
             revenueGrowthPercent?: number | null;
             revenueMinor: number;
             topAreas?: components["schemas"]["DirectAdminReportsTopAreaPoint"][];
+        };
+        /** DirectAdminReportsDailyRevenuePoint */
+        DirectAdminReportsDailyRevenuePoint: {
+            /** Format: date */
+            day: string;
+            revenueMinor: number;
         };
         /** MobileApplyReferralResult */
         MobileApplyReferralResult: {
@@ -5195,6 +5255,25 @@ export interface components {
             /** @enum {string} */
             actionType: "monitor" | "coaching" | "training" | "warning" | "investigation" | "resolved" | "dismissed";
             notes?: string | null;
+        };
+        /** DirectAdminCleanerRosterItem */
+        DirectAdminCleanerRosterItem: {
+            /** Format: uuid */
+            applicationId?: string | null;
+            applicationStatus?: string | null;
+            completedJobs?: number | null;
+            email?: string | null;
+            hourlyRateGhs?: number | null;
+            name: string;
+            phone?: string | null;
+            rating?: number | null;
+            specialties: string[];
+            status: string;
+            /** Format: date-time */
+            updatedAt?: string | null;
+            /** Format: uuid */
+            userId: string;
+            verified: boolean;
         };
     };
     responses: never;
