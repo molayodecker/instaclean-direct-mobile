@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, StyleSheet, TextInput, View } from 'react-native';
 import { AdminOnly } from '@/components/AdminOnly';
 import { Button } from '@/components/ui/Button';
@@ -41,6 +41,12 @@ export default function AssistedBookingScreen() {
   const [consentConfirmed, setConsentConfirmed] = useState(false);
   const [sendNotifications, setSendNotifications] = useState(true);
   const [actionError, setActionError] = useState<string | null>(null);
+  const idempotencyKey = useRef(newIdempotencyKey());
+
+  useEffect(() => {
+    idempotencyKey.current = newIdempotencyKey();
+  }, [selectedCustomerId, serviceId, cleanerId, address, scheduledDate, scheduledTime,
+    durationHours, specialInstructions, adminNote, consentConfirmed, sendNotifications]);
 
   const selectedCustomer = useMemo(
     () => (customersQuery.data?.customers ?? []).find((c) => c.userId === selectedCustomerId),
@@ -92,12 +98,13 @@ export default function AssistedBookingScreen() {
       sendNotifications,
       specialInstructions: specialInstructions.trim() || null,
       adminNote: adminNote.trim() || null,
-      idempotencyKey: newIdempotencyKey(),
+      idempotencyKey: idempotencyKey.current,
     };
 
     setActionError(null);
     try {
       const result = await create.mutateAsync(body);
+      idempotencyKey.current = newIdempotencyKey();
       Alert.alert(
         'Booking created',
         `${result.count} booking(s) · ${result.paymentStatus}`,
