@@ -7,4 +7,5 @@ export * from './contract-ops';
 export * from './config';
 export * from './errors';
 export * from './format';
+export { setSessionListener } from './api';
 export { clearStoredTokens, readStoredTokens, writeStoredTokens } from './session-store';

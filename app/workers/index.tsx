@@ -64,7 +64,7 @@ export default function WorkersScreen() {
         <QueryState loading={loading} error={error} />
         {tab === 'roster' &&
           (workers.data?.cleaners ?? []).map((w) => (
-            <Pressable key={w.userId} style={styles.row} onPress={() => router.push(`/workers/${w.userId}`)}>
+            <Pressable key={w.userId} style={styles.row} onPress={() => router.push({ pathname: '/workers/[userId]', params: { userId: w.userId, search } })}>
               <View style={styles.avatar}>
                 <AppText style={styles.avatarText}>{initials(w.name)}</AppText>
               </View>

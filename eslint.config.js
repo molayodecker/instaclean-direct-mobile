@@ -6,5 +6,8 @@ module.exports = defineConfig([
   expoConfig,
   {
     ignores: ["dist/*"],
+    // Existing form hydration effects intentionally synchronize editable local state
+    // with asynchronously loaded records. Keep visible warnings while modernizing.
+    rules: { 'react-hooks/set-state-in-effect': 'warn' },
   }
 ]);
