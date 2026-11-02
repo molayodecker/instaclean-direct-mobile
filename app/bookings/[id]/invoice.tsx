@@ -58,9 +58,9 @@ export default function BookingInvoiceScreen() {
     if (!name || !proj) return null;
     return {
       billToName: name,
-      billToEmail: booking.customerEmail ?? null,
-      billToPhone: booking.customerPhone ?? null,
-      billToAddress: booking.address ?? null,
+      billToEmail: saved ? saved.billToEmail : (booking.customerEmail ?? null),
+      billToPhone: saved ? saved.billToPhone : (booking.customerPhone ?? null),
+      billToAddress: saved ? saved.billToAddress : (booking.address ?? null),
       project: proj,
       issuedOn: saved?.issuedOn ?? accraTodayIso(),
       adjustmentMinor: saved?.adjustmentMinor ?? 0,
