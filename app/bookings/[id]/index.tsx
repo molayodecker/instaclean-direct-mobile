@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, TextInput, View } from 'react-native';
 import { AdminOnly } from '@/components/AdminOnly';
 import { Button } from '@/components/ui/Button';
@@ -45,6 +45,13 @@ export default function BookingDetailScreen() {
   const [cashAmountGhs, setCashAmountGhs] = useState('');
   const [cashNotes, setCashNotes] = useState('');
   const [actionError, setActionError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (booking) {
+      setRescheduleDate(booking.scheduledDate ?? '');
+      setRescheduleTime(booking.scheduledTime ?? '09:00');
+    }
+  }, [booking?.id, booking?.scheduledDate, booking?.scheduledTime]);
 
   const busy =
     assign.isPending ||
