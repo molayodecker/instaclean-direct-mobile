@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Linking, StyleSheet, TextInput, View } from 'react-native';
 import { AdminOnly } from '@/components/AdminOnly';
 import { Button } from '@/components/ui/Button';
@@ -99,6 +99,11 @@ function RequestsTab({ query }: { query: ReturnType<typeof useAdminPaymentReques
   const [description, setDescription] = useState('');
   const [amountGhs, setAmountGhs] = useState('');
   const [actionError, setActionError] = useState<string | null>(null);
+  const idempotencyKey = useRef(newIdempotencyKey());
+
+  useEffect(() => {
+    idempotencyKey.current = newIdempotencyKey();
+  }, [customerName, phone, description, amountGhs]);
 
   async function onCreate() {
     const amount = Number(amountGhs.replace(/,/g, '').trim());
@@ -113,9 +118,10 @@ function RequestsTab({ query }: { query: ReturnType<typeof useAdminPaymentReques
         phone: phone.trim(),
         description: description.trim(),
         amountMinor: Math.round(amount * 100),
-        idempotencyKey: newIdempotencyKey(),
+        idempotencyKey: idempotencyKey.current,
         remindIfUnpaid: false,
       });
+      idempotencyKey.current = newIdempotencyKey();
       setShowCreate(false);
       setCustomerName('');
       setPhone('');
