@@ -26,11 +26,10 @@ export default function PlacementDetailScreen() {
     [list.data, placementId],
   );
 
-  const choices = useMemo(() => {
-    const rows = candidates.data?.candidates ?? [];
-    if (!placement?.role) return rows;
-    return rows.filter((c: AdminCandidate) => c.desiredRoles.includes(placement.role));
-  }, [candidates.data, placement?.role]);
+  const rows = candidates.data?.candidates ?? [];
+  const choices = placement?.role
+    ? rows.filter((c: AdminCandidate) => c.desiredRoles.includes(placement.role))
+    : rows;
 
   async function onMatch(candidateUserId: string) {
     setActionError(null);
