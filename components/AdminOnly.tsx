@@ -4,15 +4,24 @@ import { useAuth } from '@/context/AuthContext';
 import { AppText } from '@/components/ui/Typography';
 import { theme } from '@/constants/theme';
 
-export function AdminOnly({ children }: { children: ReactNode }) {
+export function AdminOnly({
+  children,
+  allowReviewers = false,
+}: {
+  children: ReactNode;
+  allowReviewers?: boolean;
+}) {
   const { user } = useAuth();
+  const allowed = allowReviewers ? Boolean(user?.admin || user?.reviewer) : Boolean(user?.admin);
 
-  if (!user?.admin) {
+  if (!allowed) {
     return (
       <View style={styles.box}>
-        <AppText variant="subtitle">Admin access required</AppText>
+        <AppText variant="subtitle">{allowReviewers ? 'Staff access required' : 'Admin access required'}</AppText>
         <AppText variant="caption" style={styles.caption}>
-          This screen uses Mithril admin-only routes. Ask an owner to grant the admin role.
+          {allowReviewers
+            ? 'This screen is for admins and reviewers.'
+            : 'This screen uses Mithril admin-only routes. Ask an owner to grant the admin role.'}
         </AppText>
       </View>
     );

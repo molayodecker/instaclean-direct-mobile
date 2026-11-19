@@ -43,7 +43,7 @@ export default function ContractDetailScreen() {
   return (
     <Screen>
       <ScreenHeader title={client?.name ?? 'Contract'} subtitle={month} showBack />
-      <AdminOnly>
+      <AdminOnly allowReviewers>
         <QueryState loading={isLoading} error={error} empty={!isLoading && !data} emptyMessage="Contract not found." />
         {data && client && (
           <>

@@ -26,7 +26,7 @@ export default function ContractsScreen() {
         showBack
         right={<ScreenHeaderActions icon="refresh" onPress={() => refetch()} />}
       />
-      <AdminOnly>
+      <AdminOnly allowReviewers>
         <View style={styles.monthRow}>
           <Chip label="This month" active={month === currentContractMonth()} onPress={() => setMonth(currentContractMonth())} />
         </View>
