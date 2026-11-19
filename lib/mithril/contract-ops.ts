@@ -3,6 +3,8 @@ import { mithrilQueryString } from './openapi';
 import type {
   AdminContractDetail,
   AdminContractListResponse,
+  AdminContractWorkerRatingRequest,
+  AdminContractWorkerRatingResult,
   AdminWorkerApplicationDraftDetail,
   AdminWorkerApplicationDraftListResponse,
 } from './types';
@@ -35,6 +37,18 @@ export async function getAdminContract(accessToken: string, contractId: string, 
   return opsFetch<AdminContractDetail>(
     accessToken,
     `/direct/admin/contracts/${encodeURIComponent(contractId)}${mithrilQueryString({ month: m })}`,
+  );
+}
+
+export async function sendAdminContractWorkerRating(
+  accessToken: string,
+  contractId: string,
+  body: AdminContractWorkerRatingRequest,
+) {
+  return opsFetch<AdminContractWorkerRatingResult>(
+    accessToken,
+    `/direct/admin/contracts/${encodeURIComponent(contractId)}/worker-rating`,
+    { method: 'POST', body: JSON.stringify(body) },
   );
 }
 

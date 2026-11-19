@@ -1575,6 +1575,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/direct/admin/contracts/{id}/worker-rating": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Ask the contract client to rate their worker on WhatsApp */
+        post: operations["direct.sendAdminContractWorkerRating"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/mobile/guest/calls/is-location-in-active-service-area": {
         parameters: {
             query?: never;
@@ -2440,6 +2457,17 @@ export interface components {
             clientId?: string;
             /** Format: uuid */
             id: string;
+        };
+        /** DirectAdminContractWorkerRatingRequest */
+        DirectAdminContractWorkerRatingRequest: {
+            /** @description Ghana number for this message. Blank uses the number saved on the contract. */
+            phone?: string | null;
+        };
+        /** DirectAdminContractWorkerRatingResult */
+        DirectAdminContractWorkerRatingResult: {
+            ok: boolean;
+            phone: string;
+            sent: boolean;
         };
         /** DirectAdminContractInvoiceMonth */
         DirectAdminContractInvoiceMonth: {
@@ -7625,6 +7653,33 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DirectAdminContractLetterResult"];
+                };
+            };
+        };
+    };
+    "direct.sendAdminContractWorkerRating": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** @description Rating request */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DirectAdminContractWorkerRatingRequest"];
+            };
+        };
+        responses: {
+            /** @description Rating request */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DirectAdminContractWorkerRatingResult"];
                 };
             };
         };

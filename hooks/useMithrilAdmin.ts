@@ -30,11 +30,13 @@ import {
   getAdminWorkerWallet,
   listAdminContracts,
   getAdminContract,
+  sendAdminContractWorkerRating,
   listAdminWorkerApplicationDrafts,
   getAdminWorkerApplicationDraft,
   saveAdminAppUpdatePolicy,
   updateAdminService,
   type AdminAppUpdatePolicySaveRequest,
+  type AdminContractWorkerRatingRequest,
   type AdminBookingsQuery,
   type AdminReportsDays,
   type AdminReviewFilter,
@@ -336,6 +338,14 @@ export function useAdminContract(contractId: string, month?: string) {
     queryKey: ['admin-contract', contractId, month ?? 'current'],
     enabled: enabled && Boolean(contractId),
     queryFn: () => getAdminContract(accessToken!, contractId, month),
+  });
+}
+
+export function useSendAdminContractWorkerRating(contractId: string) {
+  const { accessToken } = useAccessToken();
+  return useMutation({
+    mutationFn: (body: AdminContractWorkerRatingRequest) =>
+      sendAdminContractWorkerRating(accessToken!, contractId, body),
   });
 }
 
