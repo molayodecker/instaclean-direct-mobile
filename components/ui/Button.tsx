@@ -7,11 +7,13 @@ type ButtonProps = {
   variant?: 'primary' | 'outline' | 'ghost';
   style?: ViewStyle;
   small?: boolean;
+  disabled?: boolean;
 };
 
-export function Button({ label, onPress, variant = 'primary', style, small }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', style, small, disabled }: ButtonProps) {
   return (
     <Pressable
+      disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => [
         styles.base,
@@ -19,7 +21,8 @@ export function Button({ label, onPress, variant = 'primary', style, small }: Bu
         variant === 'primary' && styles.primary,
         variant === 'outline' && styles.outline,
         variant === 'ghost' && styles.ghost,
-        pressed && { opacity: 0.85 },
+        disabled && styles.disabled,
+        pressed && !disabled && { opacity: 0.85 },
         style,
       ]}>
       <Text
@@ -60,6 +63,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.accent,
     backgroundColor: 'transparent',
+  },
+  disabled: {
+    opacity: 0.5,
   },
   label: {
     fontSize: 16,

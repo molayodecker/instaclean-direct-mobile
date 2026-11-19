@@ -151,6 +151,8 @@ export type AdminWorkerApplicationDraftDetail = MithrilSchema<'DirectAdminCleane
 export type AdminContractSummary = MithrilSchema<'DirectAdminContractSummary'>;
 export type AdminContractListResponse = MithrilSchema<'DirectAdminContractList'>;
 export type AdminContractDetail = MithrilSchema<'DirectAdminContractDetail'>;
+export type AdminContractWorkerRatingRequest = MithrilSchema<'DirectAdminContractWorkerRatingRequest'>;
+export type AdminContractWorkerRatingResult = MithrilSchema<'DirectAdminContractWorkerRatingResult'>;
 
 export type AdminWorkerWallet = MithrilSchema<'DirectAdminWorkerWallet'>;
 export type AdminWalletCreditRequest = MithrilSchema<'DirectAdminWalletCreditRequest'>;
